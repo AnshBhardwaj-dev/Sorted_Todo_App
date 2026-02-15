@@ -1,8 +1,9 @@
 package com.example.sorted.domain.usecase
 
-import com.example.sorted.domain.model.FilterType
+import com.example.sorted.domain.model.PriorityFilter
 import com.example.sorted.domain.model.PRIORITY
 import com.example.sorted.domain.model.SortType
+import com.example.sorted.domain.model.StatusFilter
 import com.example.sorted.domain.model.Todo
 import com.example.sorted.domain.repository.TodoRepository
 import kotlinx.coroutines.flow.Flow
@@ -13,23 +14,34 @@ class GetAllTodoUseCase(
 ) {
     operator fun invoke(
         sortType: SortType,
-        filterType: FilterType
+        statusFilter: StatusFilter,
+        priorityFilter: PriorityFilter
     ): Flow<List<Todo>> {
         return repository.getAllTodos().map { todos ->
-            val filtered = when (filterType) {
-                FilterType.BY_ALL -> todos
-                FilterType.BY_DUE_DATE_COMPLETED -> todos.filter { it.isCompleted }
-                FilterType.BY_DUE_DATE_PENDING -> todos.filter { !it.isCompleted }
-                FilterType.BY_DUE_DATE_TODAY -> todos.filter { it.dueDate == System.currentTimeMillis() }
-                FilterType.BY_DUE_DATE_UPCOMING -> todos.filter { it.dueDate > System.currentTimeMillis() }
-                FilterType.BY_PRIORITY_HIGH -> todos.sortedByDescending { it.priority == PRIORITY.HIGH }
-                FilterType.BY_PRIORITY_LOW -> todos.sortedByDescending { it.priority == PRIORITY.LOW }
-                FilterType.BY_PRIORITY_MEDIUM -> todos.sortedByDescending { it.priority == PRIORITY.MEDIUM }
+            val statusFiltered = when (statusFilter) {
+                StatusFilter.ALL -> todos
+                StatusFilter.COMPLETED -> todos.filter { it.isCompleted }
+                StatusFilter.PENDING -> todos.filter { !it.isCompleted }
+                StatusFilter.TODAY -> {
+                    val now = System.currentTimeMillis()
+                    todos.filter { it.dueDate >= now }
+                }
+            }
+            val priorityFiltered = when (priorityFilter) {
+                PriorityFilter.ALL -> statusFiltered
+                PriorityFilter.HIGH -> statusFiltered.filter { it.priority.name == "HIGH" }
+                PriorityFilter.MEDIUM -> statusFiltered.filter { it.priority.name == "MEDIUM" }
+                PriorityFilter.LOW -> statusFiltered.filter { it.priority.name == "LOW" }
             }
             when (sortType) {
-                SortType.BY_DUE_DATE_ASC -> filtered.sortedBy { it.dueDate }
-                SortType.BY_DUE_DATE_DESC -> filtered.sortedByDescending { it.dueDate }
-                SortType.BY_PRIORITY_ASC -> filtered.sortedBy { it.priority.ordinal }
+                SortType.BY_PRIORITY_ASC ->
+                    priorityFiltered.sortedBy { it.priority.ordinal }
+
+                SortType.BY_DUE_DATE_ASC ->
+                    priorityFiltered.sortedBy { it.dueDate }
+
+                SortType.BY_DUE_DATE_DESC ->
+                    priorityFiltered.sortedByDescending { it.dueDate }
             }
         }
     }
