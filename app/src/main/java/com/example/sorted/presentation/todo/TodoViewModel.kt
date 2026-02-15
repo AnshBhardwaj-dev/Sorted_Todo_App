@@ -9,6 +9,7 @@ import com.example.sorted.domain.model.Todo
 import com.example.sorted.domain.usecase.TodoUseCases
 import com.example.sorted.domain.validation.ValidationResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -27,6 +28,7 @@ class TodoViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TodoUiState())
+    @OptIn(ExperimentalCoroutinesApi::class)
     val uiState: StateFlow<TodoUiState> =
         combine(
             _uiState.map { it.sortType },
