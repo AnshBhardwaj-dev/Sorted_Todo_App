@@ -1,7 +1,6 @@
 package com.example.sorted.domain.usecase
 
 import com.example.sorted.domain.model.PriorityFilter
-import com.example.sorted.domain.model.PRIORITY
 import com.example.sorted.domain.model.SortType
 import com.example.sorted.domain.model.StatusFilter
 import com.example.sorted.domain.model.Todo
