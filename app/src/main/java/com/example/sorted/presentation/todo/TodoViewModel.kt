@@ -13,7 +13,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -28,6 +27,7 @@ class TodoViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TodoUiState())
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiState: StateFlow<TodoUiState> =
         combine(
@@ -35,9 +35,17 @@ class TodoViewModel @Inject constructor(
             _uiState.map { it.statusFilter },
             _uiState.map { it.priorityFilter }
         ) { sortType, statusFilter, priorityFilter ->
-            Triple(sortType, statusFilter, priorityFilter)
+            Triple(
+                sortType,
+                statusFilter,
+                priorityFilter
+            )
         }.flatMapLatest { (sortType, statusFilter, priorityFilter) ->
-            useCases.getAllTodo(sortType, statusFilter, priorityFilter)
+            useCases.getAllTodo(
+                sortType,
+                statusFilter,
+                priorityFilter
+            )
         }.map { todos ->
             _uiState.value.copy(todos = todos)
         }.stateIn(

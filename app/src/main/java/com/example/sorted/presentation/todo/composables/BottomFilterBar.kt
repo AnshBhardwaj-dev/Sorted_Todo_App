@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sorted.R
 import com.example.sorted.domain.model.StatusFilter
-import com.example.sorted.ui.theme.SortedTheme
 
 @Composable
 fun BottomFilterBar(
@@ -44,7 +43,10 @@ fun BottomFilterBar(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 12.dp),
+                .padding(
+                    horizontal = 20.dp,
+                    vertical = 12.dp
+                ),
             shape = RoundedCornerShape(28.dp),
             tonalElevation = 8.dp,
             shadowElevation = 12.dp,
@@ -53,7 +55,10 @@ fun BottomFilterBar(
 
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 20.dp, vertical = 14.dp),
+                    .padding(
+                        horizontal = 20.dp,
+                        vertical = 14.dp
+                    ),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -79,7 +84,10 @@ fun BottomFilterBar(
             onClick = onAddClick,
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .offset(y = (-28).dp, x = (-20).dp),
+                .offset(
+                    y = (-28).dp,
+                    x = (-20).dp
+                ),
             containerColor = MaterialTheme.colorScheme.primary,
             shape = CircleShape,
             elevation = FloatingActionButtonDefaults.elevation(8.dp)
@@ -96,7 +104,7 @@ fun BottomFilterBar(
 @Preview(showBackground = true)
 @Composable
 fun BottomFilterBarPreview() {
-    MaterialTheme(){
+    MaterialTheme() {
         BottomFilterBar(
             selectedStatus = StatusFilter.ALL,
             onStatusSelected = {},
@@ -105,10 +113,11 @@ fun BottomFilterBarPreview() {
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun BottomFilterBarDarkPreview() {
-    MaterialTheme(colorScheme = darkColorScheme()){
+    MaterialTheme(colorScheme = darkColorScheme()) {
         BottomFilterBar(
             selectedStatus = StatusFilter.ALL,
             onStatusSelected = {},
