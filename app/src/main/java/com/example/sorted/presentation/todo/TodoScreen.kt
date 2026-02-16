@@ -48,10 +48,6 @@ fun TodoScreen(
             .fillMaxSize()
     ) {
 
-        // ===========================
-        // MAIN TODO LIST
-        // ===========================
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

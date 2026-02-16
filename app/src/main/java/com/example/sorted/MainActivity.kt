@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import com.example.sorted.presentation.todo.TodoScreen
+import com.example.sorted.ui.theme.SortedTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -16,7 +17,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MaterialTheme {
+            SortedTheme{
                 TodoScreen()
             }
         }
