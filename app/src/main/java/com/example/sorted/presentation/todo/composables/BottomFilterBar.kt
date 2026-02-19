@@ -63,11 +63,14 @@ fun BottomFilterBar(
                         radius = 10.dp,
                         spread = 2.dp,
                         color = MaterialTheme.colorScheme.outlineVariant,
-                        offset = DpOffset(3.dp, 4.dp)
+                        offset = DpOffset(
+                            3.dp,
+                            4.dp
+                        )
                     )
                 ),
             shape = RoundedCornerShape(50),
-            color = Color.White,
+            color = Color.White.copy(alpha = 0.38f),
             tonalElevation = 8.dp
         ) {
 

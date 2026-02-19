@@ -30,9 +30,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sorted.domain.model.PRIORITY
 import com.example.sorted.domain.model.PriorityFilter
 import com.example.sorted.domain.model.Todo
 import com.example.sorted.presentation.todo.composables.BottomFilterBar
+import com.example.sorted.presentation.todo.composables.SwipeToReveal
 
 @Composable
 fun TodoScreen(
@@ -62,9 +64,23 @@ fun TodoScreen(
             items(
                 uiState.todos,
                 key = { it.id }) { todo ->
-                TodoItem(
-                    todo = todo,
-                    onDelete = { viewModel.deleteTodo(todo) }
+                SwipeToReveal(
+                    title = todo.title,
+                    description = todo.description,
+                    dueDate = todo.dueDate,
+                    priority = when (todo.priority) {
+                        PRIORITY.HIGH -> "High"
+                        PRIORITY.MEDIUM -> "Medium"
+                        PRIORITY.LOW -> "Low"
+                    },
+                    onDelete = { viewModel.deleteTodo(todo) },
+                    onEdit = {
+                        // TODO: Navigate to Edit Screen
+                    },
+                    onDone = {
+                        viewModel.deleteTodo(todo)
+                        // TODO: Mark todo as done
+                    }
                 )
             }
         }
