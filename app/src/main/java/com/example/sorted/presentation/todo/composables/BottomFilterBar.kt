@@ -1,5 +1,6 @@
 package com.example.sorted.presentation.todo.composables
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,89 +40,94 @@ fun BottomFilterBar(
     selectedStatus: StatusFilter,
     onStatusSelected: (StatusFilter) -> Unit,
     onAddClick: () -> Unit,
-    onPriorityClick: () -> Unit
+    onPriorityClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-            .padding(
-                horizontal = 20.dp,
-                vertical = 12.dp
-            ),
-        verticalAlignment = Alignment.CenterVertically
+    Box(
+        modifier = modifier
     ) {
-        Surface(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
-                .height(64.dp)
-                .dropShadow(
-                    shape = RoundedCornerShape(50),
-                    shadow = Shadow(
-                        radius = 10.dp,
-                        spread = 2.dp,
-                        color = MaterialTheme.colorScheme.outlineVariant,
-                        offset = DpOffset(
-                            3.dp,
-                            4.dp
-                        )
-                    )
+                .navigationBarsPadding()
+                .padding(
+                    horizontal = 20.dp,
+                    vertical = 12.dp
                 ),
-            shape = RoundedCornerShape(50),
-            color = Color.White.copy(alpha = 0.38f),
-            tonalElevation = 8.dp
+            verticalAlignment = Alignment.CenterVertically
         ) {
-
-            Row(
+            Surface(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .height(64.dp)
+                    .dropShadow(
+                        shape = RoundedCornerShape(50),
+                        shadow = Shadow(
+                            radius = 10.dp,
+                            spread = 2.dp,
+                            color = MaterialTheme.colorScheme.outlineVariant,
+                            offset = DpOffset(
+                                3.dp,
+                                4.dp
+                            )
+                        )
+                    ),
+                shape = RoundedCornerShape(50),
+                color = Color.White.copy(alpha = 0.38f),
+                tonalElevation = 8.dp
             ) {
 
-                IconButton(
-                    onClick = onPriorityClick,
-                    modifier = Modifier.size(40.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.outline_filter_alt_24),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+
+                    IconButton(
+                        onClick = onPriorityClick,
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.outline_filter_alt_24),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    VerticalDivider(
+                        modifier = Modifier
+                            .height(28.dp)
+                            .padding(horizontal = 8.dp),
+                        color = MaterialTheme.colorScheme.outlineVariant
+                    )
+
+                    FilterNavigation(
+                        selectedFilter = selectedStatus,
+                        onFilterSelected = onStatusSelected
                     )
                 }
+            }
 
-                VerticalDivider(
-                    modifier = Modifier
-                        .height(28.dp)
-                        .padding(horizontal = 8.dp),
-                    color = MaterialTheme.colorScheme.outlineVariant
-                )
+            Spacer(modifier = Modifier.width(16.dp))
 
-                FilterNavigation(
-                    selectedFilter = selectedStatus,
-                    onFilterSelected = onStatusSelected
+            // FAB
+            FloatingActionButton(
+                onClick = onAddClick,
+                containerColor = MaterialTheme.colorScheme.primary,
+                shape = CircleShape,
+                modifier = Modifier.size(64.dp),
+                elevation = FloatingActionButtonDefaults.loweredElevation(6.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(28.dp)
                 )
             }
-        }
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        // FAB
-        FloatingActionButton(
-            onClick = onAddClick,
-            containerColor = MaterialTheme.colorScheme.primary,
-            shape = CircleShape,
-            modifier = Modifier.size(64.dp),
-            elevation = FloatingActionButtonDefaults.loweredElevation(6.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.size(28.dp)
-            )
         }
     }
 }
@@ -135,7 +141,8 @@ fun BottomFilterBarPreview() {
             selectedStatus = StatusFilter.ALL,
             onStatusSelected = {},
             onAddClick = {},
-            onPriorityClick = {}
+            onPriorityClick = {},
+            modifier = Modifier
         )
     }
 }
@@ -148,7 +155,8 @@ fun BottomFilterBarDarkPreview() {
             selectedStatus = StatusFilter.ALL,
             onStatusSelected = {},
             onAddClick = {},
-            onPriorityClick = {}
+            onPriorityClick = {},
+            modifier = Modifier
         )
     }
 }

@@ -6,14 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -22,9 +15,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,153 +38,76 @@ fun SwipeToReveal(
 ) {
     val scope = rememberCoroutineScope()
     val density = LocalDensity.current
-    val swipeableState = remember { Animatable(0f) }
-    val actionWidth = with(density) { 80.dp.toPx() }
-    val maxSwipeAmount = actionWidth * 3 // Three actions
+
+    val offsetX = remember { Animatable(0f) }
+    val actionWidthPx = with(density) { 80.dp.toPx() }
+    val maxSwipe = actionWidthPx * 3
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(12.dp))
     ) {
-        // Background actions
+
+        // BACKGROUND ACTIONS
         Row(
             modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surface),
+                .matchParentSize()
+                .background(MaterialTheme.colorScheme.surfaceVariant),
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Done action
-            Box(
-                modifier = Modifier
-                    .width(80.dp)
-                    .fillMaxSize()
-                    .background(Color(0xFF4CAF50))
-                    .clip(
-                        RoundedCornerShape(
-                            topStart = 10.dp,
-                            bottomStart = 10.dp
-                        )
-                    ),
-                contentAlignment = Alignment.Center
+
+            ActionButton(
+                color = Color(0xFF4CAF50),
+                icon = Icons.Default.CheckCircle
             ) {
-                IconButton(
-                    onClick = {
-                        scope.launch {
-                            swipeableState.animateTo(
-                                0f,
-                                tween(300)
-                            )
-                            onDone()
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = "Done",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
+                scope.launch {
+                    offsetX.animateTo(0f, tween(300))
+                    onDone()
                 }
             }
 
-            // Edit action
-            Box(
-                modifier = Modifier
-                    .width(80.dp)
-                    .fillMaxSize()
-                    .background(Color(0xFF2196F3)),
-                contentAlignment = Alignment.Center
+            ActionButton(
+                color = Color(0xFF2196F3),
+                icon = Icons.Default.Edit
             ) {
-                IconButton(
-                    onClick = {
-                        scope.launch {
-                            swipeableState.animateTo(
-                                0f,
-                                tween(300)
-                            )
-                            onEdit()
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
+                scope.launch {
+                    offsetX.animateTo(0f, tween(300))
+                    onEdit()
                 }
             }
 
-            // Delete action
-            Box(
-                modifier = Modifier
-                    .width(80.dp)
-                    .fillMaxSize()
-                    .background(Color(0xFFF44336))
-                    .clip(
-                        RoundedCornerShape(
-                            topEnd = 10.dp,
-                            bottomEnd = 10.dp
-                        )
-                    ),
-                contentAlignment = Alignment.Center
+            ActionButton(
+                color = Color(0xFFF44336),
+                icon = Icons.Default.Delete
             ) {
-                IconButton(
-                    onClick = {
-                        scope.launch {
-                            swipeableState.animateTo(
-                                0f,
-                                tween(300)
-                            )
-                            onDelete()
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
+                scope.launch {
+                    offsetX.animateTo(0f, tween(300))
+                    onDelete()
                 }
             }
         }
 
-        // Foreground item
+        // FOREGROUND
         Box(
             modifier = Modifier
-                .offset {
-                    IntOffset(
-                        swipeableState.value.roundToInt(),
-                        0
-                    )
-                }
+                .offset { IntOffset(offsetX.value.roundToInt(), 0) }
                 .draggable(
                     orientation = Orientation.Horizontal,
                     state = rememberDraggableState { delta ->
+                        val newOffset =
+                            (offsetX.value + delta).coerceIn(-maxSwipe, 0f)
                         scope.launch {
-                            val newValue = (swipeableState.value + delta)
-                                .coerceIn(
-                                    -maxSwipeAmount,
-                                    0f
-                                )
-                            swipeableState.snapTo(newValue)
+                            offsetX.snapTo(newOffset)
                         }
                     },
                     onDragStopped = {
                         scope.launch {
-                            if (swipeableState.value < -maxSwipeAmount / 2) {
-                                swipeableState.animateTo(
-                                    -maxSwipeAmount,
-                                    tween(300)
-                                )
+                            if (offsetX.value < -maxSwipe / 2) {
+                                offsetX.animateTo(-maxSwipe, tween(300))
                             } else {
-                                swipeableState.animateTo(
-                                    0f,
-                                    tween(300)
-                                )
+                                offsetX.animateTo(0f, tween(300))
                             }
                         }
                     }
@@ -204,6 +118,29 @@ fun SwipeToReveal(
                 description = description,
                 dueDate = dueDate,
                 priority = priority
+            )
+        }
+    }
+}
+
+@Composable
+private fun ActionButton(
+    color: Color,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .width(80.dp)
+            .fillMaxHeight()
+            .background(color),
+        contentAlignment = Alignment.Center
+    ) {
+        IconButton(onClick = onClick) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = Color.White
             )
         }
     }

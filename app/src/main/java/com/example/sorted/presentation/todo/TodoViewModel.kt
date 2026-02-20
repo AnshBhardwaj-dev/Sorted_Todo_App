@@ -95,6 +95,39 @@ class TodoViewModel @Inject constructor(
         }
     }
 
+    fun updateTodo(todo: Todo) {
+        viewModelScope.launch {
+            when (val result = useCases.updateTodo(todo)) {
+
+                is ValidationResult.Success -> {
+                    _uiState.update {
+                        it.copy(
+                            titleError = null,
+                            dueDateError = null
+                        )
+                    }
+                }
+
+                is ValidationResult.Error -> {
+                    _uiState.update {
+                        it.copy(
+                            titleError = result.titleError,
+                            dueDateError = result.dueDateError
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun markDone(todo: Todo) {
+        viewModelScope.launch {
+            useCases.updateTodo(
+                todo.copy(isCompleted = true)
+            )
+        }
+    }
+
     fun deleteTodo(todo: Todo) {
         viewModelScope.launch {
             useCases.deleteTodo(todo)
