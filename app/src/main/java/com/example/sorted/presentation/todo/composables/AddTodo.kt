@@ -11,10 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -40,6 +44,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -88,19 +94,21 @@ fun AddTodoItem(
     )
 
     Box(
-        contentAlignment = Alignment.Center
-    ){
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.padding(top = 50.dp , bottom = 50.dp , start = 20.dp , end = 20.dp)
+    ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.onSurface,
+            color = MaterialTheme.colorScheme.background,
             border = BorderStroke(
                 2.dp,
-                MaterialTheme.colorScheme.onSurface
-            )
+                MaterialTheme.colorScheme.outline
+            ),
+            shape = RoundedCornerShape(10)
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(16.dp)
             ) {
 
@@ -114,19 +122,25 @@ fun AddTodoItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (existingTodo == null) "New Task" else "Edit Task",
-                        style = MaterialTheme.typography.titleMedium
+                        text = if (existingTodo == null) "Add New Task" else "Edit Task",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontWeight = FontWeight.SemiBold
                     )
 
                     IconButton(onClick = onDismiss) {
                         Icon(
-                            imageVector = Icons.Outlined.Close,
-                            contentDescription = "Close"
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Close",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
-
-                HorizontalDivider()
+                Spacer(modifier = Modifier.size(16.dp))
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outlineVariant,
+                    thickness = 1.dp
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -138,7 +152,10 @@ fun AddTodoItem(
                     buildAnnotatedString {
                         append("Title")
                         withStyle(superscriptStyle) { append("*") }
-                    }
+                    },
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Medium
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -147,8 +164,21 @@ fun AddTodoItem(
                     value = title,
                     onValueChange = { title = it },
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Title") },
-                    supportingText = { Text("Enter task title...") }
+                    placeholder = { Text("Enter task title...") },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        cursorColor = MaterialTheme.colorScheme.primary,
+                        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy
+                            (alpha = 0.6f),
+                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            .copy(alpha = 0.6f)
+
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -157,16 +187,33 @@ fun AddTodoItem(
                 // DESCRIPTION
                 // =========================
 
-                Text("Description (Optional)")
+                Text(
+                    text = "Description (Optional)",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Medium
+                )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Description") },
-                    supportingText = { Text("Add a description...") }
+                    modifier = Modifier.fillMaxWidth().height(100.dp),
+                    placeholder = { Text("Add a description...") },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        cursorColor = MaterialTheme.colorScheme.primary,
+                        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy
+                            (alpha = 0.6f),
+                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            .copy(alpha = 0.6f)
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -175,7 +222,12 @@ fun AddTodoItem(
                 // DUE DATE
                 // =========================
 
-                Text("Due Date")
+                Text(
+                    text = "Due Date",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Medium
+                )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
@@ -183,16 +235,35 @@ fun AddTodoItem(
                     value = dueDate?.let { convertMillisToDate(it) } ?: "",
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Select date") },
+                    placeholder = { Text("Select date") },
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Default.DateRange,
-                            contentDescription = "Select date"
+                            contentDescription = "Calendar",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.clickable { showDateModal = true }
                         )
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { showDateModal = true }
+                        .clickable { showDateModal = true },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        cursorColor = MaterialTheme.colorScheme.primary,
+                        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy
+                            (alpha = 0.6f),
+                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            .copy(alpha = 0.6f),
+                        disabledTextColor = MaterialTheme.colorScheme.onBackground,
+                        disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            .copy(alpha = 0.6f)
+                    )
+
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -201,7 +272,12 @@ fun AddTodoItem(
                 // PRIORITY
                 // =========================
 
-                Text("Priority")
+                Text(
+                    text = "Priority",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Medium
+                )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
@@ -219,7 +295,28 @@ fun AddTodoItem(
                                 priority = label
                             },
                             selected = index == selectedIndex,
-                            label = { Text(label) }
+                            colors = SegmentedButtonDefaults.colors(
+                                activeContentColor = MaterialTheme.colorScheme.primaryContainer,
+                                inactiveContainerColor = MaterialTheme.colorScheme
+                                    .surfaceContainerHighest,
+                                inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                activeBorderColor = MaterialTheme.colorScheme.primaryContainer,
+                                inactiveBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                                disabledActiveContainerColor = MaterialTheme.colorScheme
+                                    .primaryContainer.copy(alpha = 0.38f),
+                                disabledActiveContentColor = MaterialTheme.colorScheme
+                                    .onPrimaryContainer.copy(alpha = 0.38f),
+                                disabledInactiveContainerColor = MaterialTheme.colorScheme
+                                    .surfaceVariant,
+                                disabledInactiveContentColor = MaterialTheme.colorScheme
+                                    .onSurfaceVariant.copy(alpha = 0.38f)
+                            ),
+                            label = {
+                                Text(
+                                    text = label,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
                         )
                     }
                 }
@@ -237,9 +334,17 @@ fun AddTodoItem(
 
                     Button(
                         onClick = onCancel,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            contentColor = MaterialTheme.colorScheme.primary
+                        )
                     ) {
-                        Text("Cancel")
+                        Text(
+                            text = "Cancel",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
 
                     Button(
@@ -252,13 +357,23 @@ fun AddTodoItem(
                             )
                         },
                         modifier = Modifier.weight(1f),
-                        enabled = title.isNotBlank()
+                        enabled = title.isNotBlank(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                            disabledContainerColor = MaterialTheme.colorScheme
+                                .primary.copy(alpha = 0.38f),
+                            disabledContentColor = MaterialTheme.colorScheme.onPrimary
+                                .copy(alpha = 0.38f)
+                        )
                     ) {
                         Text(
-                            if (existingTodo == null)
+                            text = if (existingTodo == null)
                                 "Add Task"
                             else
-                                "Update Task"
+                                "Update Task",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Medium
                         )
                     }
                 }
@@ -300,14 +415,30 @@ fun DatePickerModal(
                 onClick = {
                     onDateSelected(datePickerState.selectedDateMillis)
                     onDismiss()
-                }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = MaterialTheme.colorScheme.primary
+                )
             ) {
-                Text("OK")
+                Text(
+                    "OK",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Medium
+                )
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
+            TextButton(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            ) {
+                Text(
+                    "Cancel",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Medium
+                )
             }
         }
     ) {
