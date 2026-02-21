@@ -1,5 +1,6 @@
 package com.example.sorted.presentation.todo.composables
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.res.painterResource
@@ -62,20 +64,13 @@ fun BottomFilterBar(
                     .fillMaxWidth()
                     .weight(1f)
                     .height(64.dp)
-                    .dropShadow(
-                        shape = RoundedCornerShape(50),
-                        shadow = Shadow(
-                            radius = 10.dp,
-                            spread = 2.dp,
-                            color = MaterialTheme.colorScheme.outlineVariant,
-                            offset = DpOffset(
-                                3.dp,
-                                4.dp
-                            )
-                        )
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.outline,
+                        shape = RoundedCornerShape(50)
                     ),
                 shape = RoundedCornerShape(50),
-                color = Color.White.copy(alpha = 0.38f),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.38f),
                 tonalElevation = 8.dp
             ) {
 
