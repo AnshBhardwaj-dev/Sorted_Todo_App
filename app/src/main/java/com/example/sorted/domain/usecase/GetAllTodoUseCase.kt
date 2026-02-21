@@ -7,6 +7,9 @@ import com.example.sorted.domain.model.Todo
 import com.example.sorted.domain.repository.TodoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 class GetAllTodoUseCase(
     private val repository: TodoRepository
@@ -22,8 +25,7 @@ class GetAllTodoUseCase(
                 StatusFilter.COMPLETED -> todos.filter { it.isCompleted }
                 StatusFilter.PENDING -> todos.filter { !it.isCompleted }
                 StatusFilter.TODAY -> {
-                    val now = System.currentTimeMillis()
-                    todos.filter { it.dueDate >= now }
+                    todos.filter { isToday(it.dueDate)}
                 }
             }
             val priorityFiltered = when (priorityFilter) {
@@ -33,15 +35,21 @@ class GetAllTodoUseCase(
                 PriorityFilter.LOW -> statusFiltered.filter { it.priority.name == "LOW" }
             }
             when (sortType) {
-                SortType.BY_PRIORITY_ASC ->
+                SortType.Priority ->
                     priorityFiltered.sortedBy { it.priority.ordinal }
 
-                SortType.BY_DUE_DATE_ASC ->
+                SortType.Date ->
                     priorityFiltered.sortedBy { it.dueDate }
-
-                SortType.BY_DUE_DATE_DESC ->
-                    priorityFiltered.sortedByDescending { it.dueDate }
             }
         }
     }
+}
+
+private fun isToday(timestamp: Long): Boolean {
+    val today = LocalDate.now()
+    val taskDate = Instant.ofEpochMilli(timestamp)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
+
+    return today == taskDate
 }

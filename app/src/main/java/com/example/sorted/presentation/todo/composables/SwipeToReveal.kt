@@ -29,7 +29,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
@@ -57,7 +56,9 @@ fun SwipeToReveal(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 6.dp)
+            .padding(
+                vertical = 6.dp
+            )
     ) {
 
         // BACKGROUND ACTIONS (always behind)
@@ -76,7 +77,10 @@ fun SwipeToReveal(
                 iconTint = MaterialTheme.colorScheme.onPrimaryContainer,
                 onClick = {
                     scope.launch {
-                        offsetX.animateTo(0f, tween(300))
+                        offsetX.animateTo(
+                            0f,
+                            tween(300)
+                        )
                         onDone()
                     }
                 }
@@ -89,7 +93,10 @@ fun SwipeToReveal(
                 iconTint = MaterialTheme.colorScheme.onSecondaryContainer,
                 onClick = {
                     scope.launch {
-                        offsetX.animateTo(0f, tween(300))
+                        offsetX.animateTo(
+                            0f,
+                            tween(300)
+                        )
                         onEdit()
                     }
                 }
@@ -102,7 +109,10 @@ fun SwipeToReveal(
                 iconTint = MaterialTheme.colorScheme.onErrorContainer,
                 onClick = {
                     scope.launch {
-                        offsetX.animateTo(0f, tween(300))
+                        offsetX.animateTo(
+                            0f,
+                            tween(300)
+                        )
                         onDelete()
                     }
                 }
@@ -112,12 +122,20 @@ fun SwipeToReveal(
         // FOREGROUND - Swipeable Todo Item (fully opaque)
         Box(
             modifier = Modifier
-                .offset { IntOffset(offsetX.value.roundToInt(), 0) }
+                .offset {
+                    IntOffset(
+                        offsetX.value.roundToInt(),
+                        0
+                    )
+                }
                 .fillMaxWidth()
                 .draggable(
                     orientation = Orientation.Horizontal,
                     state = rememberDraggableState { delta ->
-                        val newOffset = (offsetX.value + delta).coerceIn(-maxSwipe, 0f)
+                        val newOffset = (offsetX.value + delta).coerceIn(
+                            -maxSwipe,
+                            0f
+                        )
                         scope.launch {
                             offsetX.snapTo(newOffset)
                         }
@@ -125,9 +143,15 @@ fun SwipeToReveal(
                     onDragStopped = {
                         scope.launch {
                             if (offsetX.value < -maxSwipe / 2) {
-                                offsetX.animateTo(-maxSwipe, tween(300))
+                                offsetX.animateTo(
+                                    -maxSwipe,
+                                    tween(300)
+                                )
                             } else {
-                                offsetX.animateTo(0f, tween(300))
+                                offsetX.animateTo(
+                                    0f,
+                                    tween(300)
+                                )
                             }
                         }
                     }

@@ -32,6 +32,7 @@ fun FilterNavigation(
 ) {
 
     val filters = listOf(
+        StatusFilter.ALL to "All",
         StatusFilter.TODAY to "TODAY",
         StatusFilter.COMPLETED to "COMPLETED",
         StatusFilter.PENDING to "PENDING"
@@ -57,7 +58,7 @@ fun FilterNavigation(
                         if (isSelected)
                             MaterialTheme.colorScheme.inverseSurface
                         else
-                            MaterialTheme.colorScheme.surface
+                            MaterialTheme.colorScheme.surfaceVariant
                     )
                     .clickable { onFilterSelected(filter) }
                     .padding(horizontal = 20.dp),

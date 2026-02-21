@@ -56,7 +56,7 @@ fun TodoItem(
                 spotColor = MaterialTheme.colorScheme.outlineVariant
             ),
         shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
         tonalElevation = 0.dp,
         shadowElevation = 0.dp
     ) {
@@ -147,18 +147,17 @@ private fun PriorityBadge(priority: String) {
             MaterialTheme.colorScheme.secondaryContainer,    // #D6E8CE - Light gray-green
             MaterialTheme.colorScheme.onSecondaryContainer   // #3C4B38 - Dark gray-green
         )
+
         "medium" -> Pair(
             MaterialTheme.colorScheme.primaryContainer,      // #BEF0B2 - Light green
             MaterialTheme.colorScheme.onPrimaryContainer     // #265022 - Dark green
         )
+
         "high" -> Pair(
             MaterialTheme.colorScheme.errorContainer,        // #FFDAD6 - Light red
             MaterialTheme.colorScheme.onErrorContainer       // #93000A - Dark red
         )
-        "critical" -> Pair(
-            MaterialTheme.colorScheme.errorContainer,        // #FFDAD6 - Light red
-            MaterialTheme.colorScheme.onErrorContainer       // #93000A - Dark red
-        )
+
         else -> Pair(
             MaterialTheme.colorScheme.secondaryContainer,    // Default fallback
             MaterialTheme.colorScheme.onSecondaryContainer

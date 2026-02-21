@@ -10,9 +10,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
@@ -29,6 +33,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -45,7 +50,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -94,11 +98,17 @@ fun AddTodoItem(
     )
 
     Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.padding(top = 50.dp , bottom = 50.dp , start = 20.dp , end = 20.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = 16.dp,
+                vertical = 20.dp
+            )
     ) {
         Surface(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
             color = MaterialTheme.colorScheme.background,
             border = BorderStroke(
                 2.dp,
@@ -109,7 +119,10 @@ fun AddTodoItem(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
+                    .imePadding()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
 
                 // =========================
@@ -173,10 +186,8 @@ fun AddTodoItem(
                         cursorColor = MaterialTheme.colorScheme.primary,
                         focusedTextColor = MaterialTheme.colorScheme.onBackground,
                         unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-                        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy
-                            (alpha = 0.6f),
-                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
-                            .copy(alpha = 0.6f)
+                        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
 
                     )
                 )
@@ -199,7 +210,9 @@ fun AddTodoItem(
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    modifier = Modifier.fillMaxWidth().height(100.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 4,
+                    maxLines = 6,
                     placeholder = { Text("Add a description...") },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -209,10 +222,8 @@ fun AddTodoItem(
                         cursorColor = MaterialTheme.colorScheme.primary,
                         focusedTextColor = MaterialTheme.colorScheme.onBackground,
                         unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-                        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy
-                            (alpha = 0.6f),
-                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
-                            .copy(alpha = 0.6f)
+                        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
                 )
 
@@ -223,7 +234,10 @@ fun AddTodoItem(
                 // =========================
 
                 Text(
-                    text = "Due Date",
+                    buildAnnotatedString {
+                        append("Due Date")
+                        withStyle(superscriptStyle) { append("*") }
+                    },
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Medium
@@ -241,8 +255,7 @@ fun AddTodoItem(
                             imageVector = Icons.Default.DateRange,
                             contentDescription = "Calendar",
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.clickable { showDateModal = true }
-                        )
+                            modifier = Modifier.clickable { showDateModal = true })
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -255,13 +268,10 @@ fun AddTodoItem(
                         cursorColor = MaterialTheme.colorScheme.primary,
                         focusedTextColor = MaterialTheme.colorScheme.onBackground,
                         unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-                        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy
-                            (alpha = 0.6f),
-                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
-                            .copy(alpha = 0.6f),
+                        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                         disabledTextColor = MaterialTheme.colorScheme.onBackground,
-                        disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
-                            .copy(alpha = 0.6f)
+                        disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
 
                 )
@@ -273,7 +283,10 @@ fun AddTodoItem(
                 // =========================
 
                 Text(
-                    text = "Priority",
+                    buildAnnotatedString {
+                        append("Priority")
+                        withStyle(superscriptStyle) { append("*") }
+                    },
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Medium
@@ -285,39 +298,53 @@ fun AddTodoItem(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     options.forEachIndexed { index, label ->
+                        val isSelected = index == selectedIndex
+
+                        val (containerColor, contentColor) = when (label.lowercase()) {
+                            "low" -> Pair(
+                                MaterialTheme.colorScheme.secondaryContainer,    // #D6E8CE - Light gray-green
+                                MaterialTheme.colorScheme.onSecondaryContainer   // #3C4B38 - Dark gray-green
+                            )
+
+                            "medium" -> Pair(
+                                MaterialTheme.colorScheme.primaryContainer,      // #BEF0B2 - Light green
+                                MaterialTheme.colorScheme.onPrimaryContainer     // #265022 - Dark green
+                            )
+
+                            "high" -> Pair(
+                                MaterialTheme.colorScheme.errorContainer,        // #FFDAD6 - Light red
+                                MaterialTheme.colorScheme.onErrorContainer       // #93000A - Dark red
+                            )
+
+                            else -> Pair(
+                                MaterialTheme.colorScheme.secondaryContainer,    // Default fallback
+                                MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        }
                         SegmentedButton(
                             shape = SegmentedButtonDefaults.itemShape(
                                 index = index,
                                 count = options.size
                             ),
+                            selected = isSelected,
                             onClick = {
                                 selectedIndex = index
                                 priority = label
                             },
-                            selected = index == selectedIndex,
                             colors = SegmentedButtonDefaults.colors(
-                                activeContentColor = MaterialTheme.colorScheme.primaryContainer,
-                                inactiveContainerColor = MaterialTheme.colorScheme
-                                    .surfaceContainerHighest,
+                                activeContainerColor = containerColor,
+                                activeContentColor = contentColor,
+                                inactiveContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                                 inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                activeBorderColor = MaterialTheme.colorScheme.primaryContainer,
-                                inactiveBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                                disabledActiveContainerColor = MaterialTheme.colorScheme
-                                    .primaryContainer.copy(alpha = 0.38f),
-                                disabledActiveContentColor = MaterialTheme.colorScheme
-                                    .onPrimaryContainer.copy(alpha = 0.38f),
-                                disabledInactiveContainerColor = MaterialTheme.colorScheme
-                                    .surfaceVariant,
-                                disabledInactiveContentColor = MaterialTheme.colorScheme
-                                    .onSurfaceVariant.copy(alpha = 0.38f)
+                                activeBorderColor = containerColor,
+                                inactiveBorderColor = MaterialTheme.colorScheme.outlineVariant
                             ),
                             label = {
                                 Text(
                                     text = label,
                                     fontWeight = FontWeight.Medium
                                 )
-                            }
-                        )
+                            })
                     }
                 }
 
@@ -361,17 +388,13 @@ fun AddTodoItem(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = MaterialTheme.colorScheme.onPrimary,
-                            disabledContainerColor = MaterialTheme.colorScheme
-                                .primary.copy(alpha = 0.38f),
-                            disabledContentColor = MaterialTheme.colorScheme.onPrimary
-                                .copy(alpha = 0.38f)
+                            disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.38f),
+                            disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f)
                         )
                     ) {
                         Text(
-                            text = if (existingTodo == null)
-                                "Add Task"
-                            else
-                                "Update Task",
+                            text = if (existingTodo == null) "Add Task"
+                            else "Update Task",
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Medium
                         )
@@ -391,22 +414,32 @@ fun AddTodoItem(
             onDateSelected = { selected ->
                 dueDate = selected
             },
-            onDismiss = { showDateModal = false }
-        )
+            onDismiss = { showDateModal = false })
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerModal(
-    initialDate: Long? = null,
-    onDateSelected: (Long?) -> Unit,
-    onDismiss: () -> Unit
+    initialDate: Long? = null, onDateSelected: (Long?) -> Unit, onDismiss: () -> Unit
 ) {
 
+    val todayStart =
+        java.time.LocalDate.now().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()
+            .toEpochMilli()
+
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = initialDate
-    )
+        initialSelectedDateMillis = initialDate,
+        selectableDates = object : SelectableDates {
+
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis >= todayStart
+            }
+
+            override fun isSelectableYear(year: Int): Boolean {
+                return year >= java.time.LocalDate.now().year
+            }
+        })
 
     DatePickerDialog(
         onDismissRequest = onDismiss,
@@ -417,7 +450,7 @@ fun DatePickerModal(
                     onDismiss()
                 },
                 colors = ButtonDefaults.buttonColors(
-                    contentColor = MaterialTheme.colorScheme.primary
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             ) {
                 Text(
@@ -440,8 +473,7 @@ fun DatePickerModal(
                     fontWeight = FontWeight.Medium
                 )
             }
-        }
-    ) {
+        }) {
         DatePicker(state = datePickerState)
     }
 }

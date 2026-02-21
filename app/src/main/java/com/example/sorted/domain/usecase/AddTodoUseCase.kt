@@ -18,3 +18,4 @@ class AddTodoUseCase(
         } else return validatorResult
     }
 }
+

@@ -28,6 +28,24 @@ class TodoViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(TodoUiState())
 
+
+    val isDarkTheme: StateFlow<Boolean> = _uiState.map { it.isDarkTheme }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            false
+        )
+    val allTodos: StateFlow<List<Todo>> =
+        useCases.getAllTodo(
+            sortType = SortType.Date,
+            statusFilter = StatusFilter.ALL,
+            priorityFilter = PriorityFilter.ALL
+        ).stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
+        )
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiState: StateFlow<TodoUiState> =
         combine(
@@ -132,6 +150,10 @@ class TodoViewModel @Inject constructor(
         viewModelScope.launch {
             useCases.deleteTodo(todo)
         }
+    }
+
+    fun toggleTheme() {
+        _uiState.update { it.copy(isDarkTheme = !it.isDarkTheme) }
     }
 
     fun changeSorting(sortType: SortType) {
