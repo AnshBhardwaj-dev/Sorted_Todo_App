@@ -42,7 +42,7 @@ fun FilterNavigation(
         modifier = Modifier
             .horizontalScroll(rememberScrollState())
             .padding(horizontal = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
 
         filters.forEach { (filter, label) ->
@@ -54,27 +54,22 @@ fun FilterNavigation(
                     .height(36.dp)
                     .wrapContentSize()
                     .clip(RoundedCornerShape(50))
-                    .background(
-                        if (isSelected)
-                            MaterialTheme.colorScheme.inverseSurface
-                        else
-                            MaterialTheme.colorScheme.surfaceVariant
-                    )
                     .clickable { onFilterSelected(filter) }
-                    .padding(horizontal = 20.dp),
+                    .padding(horizontal = 18.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = label,
                     fontSize = 12.sp,
                     maxLines = 1,
+                    letterSpacing = 1.8.sp,
                     softWrap = false,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                     color = if (isSelected)
-                        MaterialTheme.colorScheme.inverseOnSurface
+                        MaterialTheme.colorScheme.primary
                     else
-                        MaterialTheme.colorScheme.onSurfaceVariant
+                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .6f)
                 )
             }
         }

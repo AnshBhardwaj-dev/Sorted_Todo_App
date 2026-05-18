@@ -1,6 +1,7 @@
 package com.example.sorted.presentation.todo.composables
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SegmentedButton
@@ -47,6 +49,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -55,6 +60,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sorted.domain.model.Todo
+import com.example.sorted.ui.theme.displayFontFamily
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -109,12 +115,11 @@ fun AddTodoItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
-            color = MaterialTheme.colorScheme.background,
-            border = BorderStroke(
-                2.dp,
-                MaterialTheme.colorScheme.outline
-            ),
-            shape = RoundedCornerShape(10)
+            color = MaterialTheme.colorScheme.surfaceContainerLow,
+            shape = RoundedCornerShape(28.dp),
+            tonalElevation = 8.dp,
+            shadowElevation = 24.dp,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
         ) {
             Column(
                 modifier = Modifier
@@ -136,9 +141,11 @@ fun AddTodoItem(
                 ) {
                     Text(
                         text = if (existingTodo == null) "Add New Task" else "Edit Task",
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        fontWeight = FontWeight.SemiBold
+                        fontFamily = displayFontFamily,
+                        fontSize = 26.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary,
+                        letterSpacing = (-0.5).sp
                     )
 
                     IconButton(onClick = onDismiss) {
@@ -150,12 +157,6 @@ fun AddTodoItem(
                     }
                 }
                 Spacer(modifier = Modifier.size(16.dp))
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.outlineVariant,
-                    thickness = 1.dp
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
 
                 // =========================
                 // TITLE
@@ -177,8 +178,11 @@ fun AddTodoItem(
                     value = title,
                     onValueChange = { title = it },
                     modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
                     placeholder = { Text("Enter task title...") },
                     colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor   = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
                         focusedLabelColor = MaterialTheme.colorScheme.primary,
@@ -213,8 +217,11 @@ fun AddTodoItem(
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 4,
                     maxLines = 6,
+                    shape = RoundedCornerShape(16.dp),
                     placeholder = { Text("Add a description...") },
                     colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor   = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
                         focusedLabelColor = MaterialTheme.colorScheme.primary,
@@ -257,10 +264,13 @@ fun AddTodoItem(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.clickable { showDateModal = true })
                     },
+                    shape = RoundedCornerShape(16.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { showDateModal = true },
                     colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor   = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
                         focusedLabelColor = MaterialTheme.colorScheme.primary,
@@ -301,25 +311,10 @@ fun AddTodoItem(
                         val isSelected = index == selectedIndex
 
                         val (containerColor, contentColor) = when (label.lowercase()) {
-                            "low" -> Pair(
-                                MaterialTheme.colorScheme.secondaryContainer,    // #D6E8CE - Light gray-green
-                                MaterialTheme.colorScheme.onSecondaryContainer   // #3C4B38 - Dark gray-green
-                            )
-
-                            "medium" -> Pair(
-                                MaterialTheme.colorScheme.primaryContainer,      // #BEF0B2 - Light green
-                                MaterialTheme.colorScheme.onPrimaryContainer     // #265022 - Dark green
-                            )
-
-                            "high" -> Pair(
-                                MaterialTheme.colorScheme.errorContainer,        // #FFDAD6 - Light red
-                                MaterialTheme.colorScheme.onErrorContainer       // #93000A - Dark red
-                            )
-
-                            else -> Pair(
-                                MaterialTheme.colorScheme.secondaryContainer,    // Default fallback
-                                MaterialTheme.colorScheme.onSecondaryContainer
-                            )
+                            "low"    -> Color(0xFFB9C8AE) to Color.White           // sage
+                            "medium" -> Color(0xFFE8C58A) to Color(0xFF3F2611)     // amber
+                            "high"   -> Color(0xFFC66E70) to Color.White           // wine
+                            else -> {Color(0xFFB9C8AE) to Color.White}
                         }
                         SegmentedButton(
                             shape = SegmentedButtonDefaults.itemShape(
@@ -356,47 +351,44 @@ fun AddTodoItem(
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-
-                    Button(
+                    OutlinedButton(
                         onClick = onCancel,
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                            contentColor = MaterialTheme.colorScheme.primary
-                        )
+                        modifier = Modifier.weight(1f).height(52.dp),
+                        shape = RoundedCornerShape(50),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary)
                     ) {
-                        Text(
-                            text = "Cancel",
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.Medium
-                        )
+                        Text("Cancel", fontWeight = FontWeight.Medium)
                     }
 
-                    Button(
-                        onClick = {
-                            onSave(
-                                title,
-                                description,
-                                dueDate,
-                                priority
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(52.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(
+                                if (title.isNotBlank())
+                                    Brush.linearGradient(listOf(
+                                        MaterialTheme.colorScheme.primary,
+                                        MaterialTheme.colorScheme.inversePrimary
+                                    ))
+                                else
+                                    Brush.linearGradient(listOf(
+                                        MaterialTheme.colorScheme.primary.copy(alpha = .4f),
+                                        MaterialTheme.colorScheme.primary.copy(alpha = .4f)
+                                    ))
                             )
-                        },
-                        modifier = Modifier.weight(1f),
-                        enabled = title.isNotBlank(),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                            disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.38f),
-                            disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f)
-                        )
+                            .clickable(enabled = title.isNotBlank()) {
+                                onSave(title, description, dueDate, priority)
+                            },
+                        contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = if (existingTodo == null) "Add Task"
-                            else "Update Task",
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.Medium
+                            text = if (existingTodo == null) "Add Task" else "Update Task",
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
                 }

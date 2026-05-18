@@ -65,16 +65,16 @@ fun SwipeToReveal(
         Row(
             modifier = Modifier
                 .matchParentSize()
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(20.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainerHighest),
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ) {
             // DONE Button
             ActionButton(
-                color = MaterialTheme.colorScheme.primaryContainer,
+                color    = MaterialTheme.colorScheme.primaryContainer,
                 icon = Icons.Default.CheckCircle,
-                iconTint = MaterialTheme.colorScheme.onPrimaryContainer,
+                MaterialTheme.colorScheme.onPrimaryContainer,
                 onClick = {
                     scope.launch {
                         offsetX.animateTo(
@@ -88,9 +88,9 @@ fun SwipeToReveal(
 
             // EDIT Button
             ActionButton(
-                color = MaterialTheme.colorScheme.secondaryContainer,
+                color    = MaterialTheme.colorScheme.tertiaryContainer,
+                iconTint = MaterialTheme.colorScheme.onTertiaryContainer,
                 icon = Icons.Default.Edit,
-                iconTint = MaterialTheme.colorScheme.onSecondaryContainer,
                 onClick = {
                     scope.launch {
                         offsetX.animateTo(
@@ -104,9 +104,9 @@ fun SwipeToReveal(
 
             // DELETE Button
             ActionButton(
-                color = MaterialTheme.colorScheme.errorContainer,
+                color = MaterialTheme.colorScheme.error,
                 icon = Icons.Default.Delete,
-                iconTint = MaterialTheme.colorScheme.onErrorContainer,
+                iconTint = MaterialTheme.colorScheme.onError,
                 onClick = {
                     scope.launch {
                         offsetX.animateTo(
