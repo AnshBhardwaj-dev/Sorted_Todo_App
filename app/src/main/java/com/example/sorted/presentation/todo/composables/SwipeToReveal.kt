@@ -82,6 +82,7 @@ fun SwipeToReveal(
                             tween(300)
                         )
                         onDone()
+                        onDelete()
                     }
                 }
             )
